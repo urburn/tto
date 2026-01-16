@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enginuity | Utah Innovation Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        utah: { red: '#CC0000', dark: '#990000' },
+                        pathway: {
+                            license: '#10B981', // Emerald
+                            venture: '#F59E0B', // Amber
+                            research: '#3B82F6' // Blue
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F9FAFB; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        
+        .logo-dot { width: 5px; height: 5px; background-color: black; border-radius: 50%; display: inline-block; }
+        
+        /* Quadrant Background */
+        .quadrant-bg {
+            background-image: 
+                linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+                linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .kanban-card { transition: all 0.2s; border-left-width: 4px; }
+        .kanban-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden text-slate-800">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-20 shadow-sm">
+        <div class="h-16 flex items-center px-6 gap-3 border-b border-slate-100">
+            <div class="grid grid-cols-3 gap-1 w-6">
+                <div class="logo-dot opacity-0"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+                <div class="logo-dot"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+                <div class="logo-dot"></div><div class="logo-dot opacity-0"></div><div class="logo-dot"></div>
+                <div class="logo-dot"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+            </div>
+            <span class="font-bold text-xl tracking-tight">Enginuity</span>
+        </div>
+        
+        <nav class="flex-1 py-6 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-6 py-3 bg-slate-50 border-r-4 border-utah-red text-black font-semibold">
+                <i class="fa-solid fa-chess-board w-5 text-utah-red"></i>
+                <span class="text-sm">Strategy & Funnel</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-black transition">
+                <i class="fa-solid fa-magnifying-glass-chart w-5"></i>
+                <span class="text-sm">Signal Discovery</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-black transition">
+                <i class="fa-solid fa-users w-5"></i>
+                <span class="text-sm">Faculty Map</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-utah-red text-white flex items-center justify-center font-bold text-xs shadow-md">
+                    U
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-900">PIVOT Center</p>
+                    <p class="text-[10px] text-slate-500">VP Dashboard</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+            <div>
+                <h1 class="text-lg font-bold text-slate-800">Commercialization Pathways</h1>
+                <p class="text-xs text-slate-500">Portfolio segmentation based on market readiness & demand signals</p>
+            </div>
+            <div class="flex gap-3">
+                <div class="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded text-slate-600">
+                    <i class="fa-solid fa-filter mr-1"></i> Dept: All
+                </div>
+                <button class="bg-black text-white text-xs font-bold px-4 py-1.5 rounded hover:bg-slate-800 transition shadow-sm">
+                    Generate Report
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-auto p-6 space-y-6">
+            
+            <div class="flex gap-6 h-[400px]">
+                
+                <div class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 p-4 relative flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide">University Portfolio Matrix</h2>
+                        <div class="flex gap-4 text-[10px] font-medium text-slate-500">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Research</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Venturing</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Licensing</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative flex-1 quadrant-bg rounded border border-slate-100">
+                        <div class="absolute top-2 left-2 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">VENTURING (Niche/High Growth)</div>
+                        <div class="absolute top-2 right-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">LICENSING (High Demand)</div>
+                        <div class="absolute bottom-2 left-2 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">PARTNERSHIPS (Early Stage)</div>
+                        <div class="absolute bottom-2 right-2 text-[10px] font-bold text-slate-400">MATURE (Low Opportunity)</div>
+                        
+                        <canvas id="portfolioMatrix"></canvas>
+                    </div>
+                    <div class="text-center text-[10px] text-slate-400 mt-2 font-medium">X-Axis: Commercial Maturity (TRL/Funding) &nbsp; | &nbsp; Y-Axis: Market Demand (News/M&A)</div>
+                </div>
+
+                <div class="w-96 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col relative overflow-hidden">
+                    <div class="h-1 bg-gradient-to-r from-utah-red to-red-900"></div>
+                    
+                    <div class="p-5 flex-1 overflow-y-auto">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold text-white bg-emerald-500 px-2 py-1 rounded shadow-sm">RECOMMENDATION: LICENSING</span>
+                            <i class="fa-solid fa-lock text-slate-300 text-xs" title="Patented"></i>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold text-slate-900 leading-tight mb-1">Poroelastic Ultrasound Scaffolding</h3>
+                        <p class="text-xs text-slate-500 mb-4">Ref: U-2024-098 | Bioengineering</p>
+
+                        <div class="bg-slate-50 rounded border border-slate-100 p-3 mb-4">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Protection Status</div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <span class="text-xs font-semibold text-slate-700">PCT Filed (US/EU)</span>
+                            </div>
+                            <div class="text-[10px] text-slate-400 mt-1">Priority Date: Oct 12, 2023</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Lead Inventor (SME)</div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-300">
+                                    <img src="https://i.pravatar.cc/150?img=68" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800">Dr. Sarah Jenkins</p>
+                                    <p class="text-xs text-slate-500">Assoc. Prof, Biomedical Eng.</p>
+                                    <a href="#" class="text-[10px] text-utah-red font-semibold hover:underline">View Publications</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-50 border border-emerald-100 p-3 rounded-lg">
+                            <div class="flex items-start gap-2">
+                                <i class="fa-solid fa-lightbulb text-emerald-600 mt-0.5 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-emerald-800">Why Licensing?</p>
+                                    <p class="text-[11px] text-emerald-700 leading-snug mt-1">
+                                        High corporate patent citation (Medtronic, Stryker). Technology is mature (TRL 6). Strong patent moat established.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border-t border-slate-100 bg-slate-50">
+                        <button class="w-full py-2 bg-white border border-slate-300 text-slate-700 text-xs font-bold rounded hover:bg-slate-100 shadow-sm">
+                            View Patent Claims
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wide mb-4">Actionable Pipeline</h2>
+                <div class="grid grid-cols-3 gap-6 h-[400px]">
+                    
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col">
+                        <div class="p-3 border-b border-slate-100 bg-blue-50/50 rounded-t-xl flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span class="font-bold text-sm text-slate-700">Research Partnerships</span>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 bg-white px-2 py-0.5 rounded border">Early Stage</span>
+                        </div>
+                        <div class="p-3 bg-slate-50/50 flex-1 overflow-y-auto space-y-3">
+                            <div class="bg-white p-3 rounded border-l-4 border-blue-500 shadow-sm cursor-pointer hover:shadow-md transition">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-1.5 rounded">Public Grants</span>
+                                    <span class="text-[10px] text-slate-400">Pre-Patent</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Dark Sky Sensor Arrays</h4>
+                                <p class="text-xs text-slate-500 mt-1">Physics Dept | PI: A. Miller</p>
+                                <div class="mt-2 text-[10px] text-slate-400">Signal: <span class="text-slate-600 font-semibold">High Gov Funding (NSF)</span></div>
+                            </div>
+                            <div class="bg-white p-3 rounded border-l-4 border-blue-500 shadow-sm cursor-pointer hover:shadow-md transition">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-1.5 rounded">Exploration</span>
+                                    <span class="text-[10px] text-slate-400">Disclosure Only</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Non-Invasive Glucose Optics</h4>
+                                <p class="text-xs text-slate-500 mt-1">Chemistry | PI: L. Wang</p>
+                                <div class="mt-2 text-[10px] text-slate-400">Signal: <span class="text-slate-600 font-semibold">Rising Academic Citations</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col">
+                        <div class="p-3 border-b border-slate-100 bg-amber-50/50 rounded-t-xl flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span class="font-bold text-sm text-slate-700">Venturing / Spin-out</span>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 bg-white px-2 py-0.5 rounded border">New Market</span>
+                        </div>
+                        <div class="p-3 bg-slate-50/50 flex-1 overflow-y-auto space-y-3">
+                            <div class="bg-white p-3 rounded border-l-4 border-amber-500 shadow-sm cursor-pointer hover:shadow-md transition">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-1.5 rounded">VC Interest</span>
+                                    <span class="text-[10px] text-slate-400">Provisional</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Epigenetic Therapy Target</h4>
+                                <p class="text-xs text-slate-500 mt-1">Huntsman Cancer | PI: R. Gupta</p>
+                                <div class="mt-2 text-[10px] text-slate-400">Signal: <span class="text-slate-600 font-semibold">Series A in Comp. Space</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col">
+                        <div class="p-3 border-b border-slate-100 bg-emerald-50/50 rounded-t-xl flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                <span class="font-bold text-sm text-slate-700">Corp Licensing</span>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-400 bg-white px-2 py-0.5 rounded border">Mature IP</span>
+                        </div>
+                        <div class="p-3 bg-slate-50/50 flex-1 overflow-y-auto space-y-3">
+                            <div class="bg-white p-3 rounded border-l-4 border-emerald-500 shadow-sm cursor-pointer hover:shadow-md transition border-2 border-slate-100">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 rounded">Corp Demand</span>
+                                    <span class="text-[10px] text-slate-400"><i class="fa-solid fa-lock text-[10px] mr-1"></i>PCT</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Ultrasound Scaffolding</h4>
+                                <p class="text-xs text-slate-500 mt-1">BioEng | PI: S. Jenkins</p>
+                                <div class="mt-2 text-[10px] text-slate-400">Signal: <span class="text-slate-600 font-semibold">Medtronic Patent Cites</span></div>
+                            </div>
+                            
+                             <div class="bg-white p-3 rounded border-l-4 border-emerald-500 shadow-sm cursor-pointer hover:shadow-md transition">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 rounded">Challenge Match</span>
+                                    <span class="text-[10px] text-slate-400"><i class="fa-solid fa-lock text-[10px] mr-1"></i>Issued</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-800">Geothermal Frac Tech</h4>
+                                <p class="text-xs text-slate-500 mt-1">EGI | PI: T. Olsen</p>
+                                <div class="mt-2 text-[10px] text-slate-400">Signal: <span class="text-slate-600 font-semibold">DoE + Chevron Interest</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const ctx = document.getElementById('portfolioMatrix').getContext('2d');
+        
+        // Custom Plugin to draw Quadrant Lines
+        const quadrantLines = {
+            id: 'quadrantLines',
+            beforeDraw: (chart) => {
+                const {ctx, chartArea: {top, bottom, left, right}, scales: {x, y}} = chart;
+                const midX = x.getPixelForValue(50);
+                const midY = y.getPixelForValue(50);
+
+                ctx.save();
+                ctx.strokeStyle = '#cbd5e1'; // Slate 300
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+
+                // Vertical Line
+                ctx.beginPath();
+                ctx.moveTo(midX, top);
+                ctx.lineTo(midX, bottom);
+                ctx.stroke();
+
+                // Horizontal Line
+                ctx.beginPath();
+                ctx.moveTo(left, midY);
+                ctx.lineTo(right, midY);
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Research Partnerships',
+                        data: [{x: 20, y: 30}, {x: 35, y: 45}, {x: 25, y: 20}, {x: 40, y: 15}],
+                        backgroundColor: '#3B82F6', // Blue
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Venturing',
+                        data: [{x: 30, y: 85}, {x: 45, y: 75}, {x: 25, y: 90}],
+                        backgroundColor: '#F59E0B', // Amber
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Licensing',
+                        data: [{x: 80, y: 85}, {x: 75, y: 90}, {x: 90, y: 70}, {x: 65, y: 80}],
+                        backgroundColor: '#10B981', // Emerald
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: 'Mature',
+                        data: [{x: 80, y: 20}, {x: 90, y: 30}],
+                        backgroundColor: '#94a3b8', // Slate
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        min: 0,
+                        max: 100,
+                        title: { display: false },
+                        grid: { display: false }
+                    },
+                    y: {
+                        min: 0,
+                        max: 100,
+                        title: { display: false },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [quadrantLines]
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enginuity | Corporate Deal Room</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        utah: { red: '#CC0000', dark: '#990000' },
+                        brand: { black: '#111827', gray: '#F3F4F6' }
+                    },
+                    boxShadow: {
+                        'float': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F8FAFC; color: #0F172A; }
+        .logo-dot { width: 5px; height: 5px; background-color: black; border-radius: 50%; display: inline-block; }
+        
+        /* Custom Table Styling */
+        .lead-row { transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .lead-row:hover { background-color: #F8FAFC; transform: scale(1.005); border-left-color: #CC0000; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        
+        /* Status Badges */
+        .badge-hot { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+        .badge-warm { background: #FFF7ED; color: #9A3412; border: 1px solid #FED7AA; }
+        .badge-new { background: #F0F9FF; color: #075985; border: 1px solid #BAE6FD; }
+
+        /* Smooth Toggle */
+        .toggle-checkbox:checked { right: 0; border-color: #CC0000; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #CC0000; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <aside class="w-20 bg-white border-r border-slate-200 flex flex-col items-center py-6 z-30 shadow-md">
+        <div class="mb-8 grid grid-cols-3 gap-1 w-6">
+            <div class="logo-dot opacity-0"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+            <div class="logo-dot"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+            <div class="logo-dot"></div><div class="logo-dot opacity-0"></div><div class="logo-dot"></div>
+            <div class="logo-dot"></div><div class="logo-dot"></div><div class="logo-dot"></div>
+        </div>
+        
+        <nav class="flex-1 space-y-6 w-full">
+            <a href="#" class="h-10 w-full flex items-center justify-center text-slate-400 hover:text-black hover:border-l-4 hover:border-black transition-all"><i class="fa-solid fa-arrow-left"></i></a>
+            <a href="#" class="h-10 w-full flex items-center justify-center text-utah-red border-l-4 border-utah-red bg-slate-50"><i class="fa-solid fa-briefcase"></i></a> <a href="#" class="h-10 w-full flex items-center justify-center text-slate-400 hover:text-black transition-all"><i class="fa-solid fa-users"></i></a>
+            <a href="#" class="h-10 w-full flex items-center justify-center text-slate-400 hover:text-black transition-all"><i class="fa-solid fa-envelope"></i></a>
+        </nav>
+
+        <div class="mt-auto">
+             <div class="w-10 h-10 rounded-full bg-utah-red text-white flex items-center justify-center font-bold text-xs shadow-md">U</div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-20 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span>Strategy Funnel</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        <span>Licensing Candidates</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-xl font-bold text-slate-900">Poroelastic Ultrasound Scaffolding</h1>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 uppercase">Licensing Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 mr-4 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                    <span class="text-xs font-semibold text-slate-600">Pipeline Value:</span>
+                    <span class="text-sm font-bold text-slate-900">$2.5M - $5M</span>
+                </div>
+                <button class="flex items-center gap-2 px-4 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-slate-800 shadow-md transition-all">
+                    <i class="fa-solid fa-robot"></i> Auto-Generate Campaign
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            
+            <div class="w-80 bg-slate-50 border-r border-slate-200 flex flex-col overflow-y-auto p-6">
+                <div class="mb-6">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Asset Snapshot</h3>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden border border-slate-200">
+                                <img src="https://i.pravatar.cc/150?img=68" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-slate-900">Dr. Sarah Jenkins</div>
+                                <div class="text-[10px] text-slate-500">Lead Inventor</div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs border-b border-slate-100 pb-2">
+                                <span class="text-slate-500">TRL Level</span>
+                                <span class="font-semibold text-slate-700">TRL 6 (Prototype)</span>
+                            </div>
+                            <div class="flex justify-between text-xs border-b border-slate-100 pb-2">
+                                <span class="text-slate-500">Patent Status</span>
+                                <span class="font-semibold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-check-circle text-green-500"></i> PCT Filed</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="text-slate-500">Citations</span>
+                                <span class="font-semibold text-slate-700">14 (Top 10%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full py-2 bg-white border border-slate-300 rounded text-xs font-semibold text-slate-600 hover:text-utah-red hover:border-utah-red transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i> View Non-Confidential Summary
+                    </button>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Why is this Hot?</h3>
+                    <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
+                        <div class="flex gap-2 items-start mb-2">
+                            <i class="fa-solid fa-arrow-trend-up text-indigo-600 text-xs mt-1"></i>
+                            <p class="text-xs font-bold text-indigo-900">Sector M&A Surge</p>
+                        </div>
+                        <p class="text-[11px] text-indigo-800 leading-snug mb-3">
+                            "Biocompatible scaffolds" mentions in Q4 earnings calls up 400%. Medtronic recently allocated $500M fund for regenerative tech.
+                        </p>
+                        <div class="h-1 w-full bg-indigo-200 rounded overflow-hidden">
+                            <div class="h-full bg-indigo-600 w-3/4"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-indigo-500 mt-1">
+                            <span>Market Demand</span>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-white flex flex-col">
+                
+                <div class="h-14 border-b border-slate-100 flex items-center justify-between px-6 bg-white">
+                    <div class="flex gap-4">
+                        <button class="text-sm font-semibold text-slate-900 border-b-2 border-utah-red py-4">AI Qualified Leads (12)</button>
+                        <button class="text-sm font-medium text-slate-500 hover:text-slate-900 py-4">Contacted (4)</button>
+                        <button class="text-sm font-medium text-slate-500 hover:text-slate-900 py-4">In Discussion (1)</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-400 mr-2">Sort by:</span>
+                        <select class="text-xs font-semibold bg-slate-50 border border-slate-200 rounded px-2 py-1 focus:outline-none focus:border-utah-red">
+                            <option>Enginuity Match Score</option>
+                            <option>Company Size</option>
+                            <option>Recent Activity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-auto p-6 bg-slate-50/50">
+                    
+                    <table class="w-full border-separate border-spacing-y-3">
+                        <thead>
+                            <tr class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider px-4">
+                                <th class="pb-2 pl-4">Company / Match Intelligence</th>
+                                <th class="pb-2">Strategic Fit</th>
+                                <th class="pb-2">Key Decision Maker</th>
+                                <th class="pb-2">Connection Path</th>
+                                <th class="pb-2 text-right pr-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr class="bg-white rounded-lg shadow-sm lead-row group">
+                                <td class="p-4 rounded-l-lg border-y border-l border-slate-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded bg-white border border-slate-200 flex items-center justify-center p-1">
+                                            <i class="fa-solid fa-heart-pulse text-blue-600 text-lg"></i> </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 text-sm">Medtronic</h4>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="badge-hot text-[10px] font-bold px-1.5 py-0.5 rounded">98% Match</span>
+                                                <span class="text-[10px] text-slate-400">Minneapolis, MN</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                                            <i class="fa-solid fa-file-contract text-utah-red text-[10px]"></i>
+                                            <span class="font-medium">Citing your Patent</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-500 leading-snug">
+                                            They cited U-2024-098 in their recent "Soft Tissue" filing (US-2025-001).
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-200">
+                                            <img src="https://i.pravatar.cc/150?img=12" class="rounded-full w-full h-full">
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-900">James Wei</div>
+                                            <div class="text-[10px] text-slate-500">VP, External Innovation</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span class="text-xs font-semibold text-slate-700">High Warmth</span>
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 mt-0.5">
+                                        CEO is Utah Alum ('98)
+                                    </div>
+                                </td>
+                                <td class="p-4 rounded-r-lg border-y border-r border-slate-100 text-right">
+                                    <button class="bg-black hover:bg-utah-red text-white text-xs font-medium px-4 py-2 rounded shadow-sm transition-all flex items-center gap-2 ml-auto">
+                                        <i class="fa-solid fa-paper-plane"></i> Draft Email
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white rounded-lg shadow-sm lead-row group">
+                                <td class="p-4 rounded-l-lg border-y border-l border-slate-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded bg-white border border-slate-200 flex items-center justify-center p-1">
+                                            <i class="fa-solid fa-flask text-orange-500 text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 text-sm">Stryker Corp</h4>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="badge-warm text-[10px] font-bold px-1.5 py-0.5 rounded">85% Match</span>
+                                                <span class="text-[10px] text-slate-400">Kalamazoo, MI</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                                            <i class="fa-solid fa-money-bill-wave text-green-600 text-[10px]"></i>
+                                            <span class="font-medium">Active Investor</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-500 leading-snug">
+                                            Just launched $100M venture fund for "Next-Gen Orthopedics."
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-200">
+                                            <img src="https://i.pravatar.cc/150?img=5" class="rounded-full w-full h-full">
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-900">Elena Ross</div>
+                                            <div class="text-[10px] text-slate-500">Director, R&D Strategy</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                                        <span class="text-xs font-semibold text-slate-700">Medium Warmth</span>
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 mt-0.5">
+                                        Shared Grant Partner (NIH)
+                                    </div>
+                                </td>
+                                <td class="p-4 rounded-r-lg border-y border-r border-slate-100 text-right">
+                                    <button class="bg-white border border-slate-300 hover:border-utah-red hover:text-utah-red text-slate-600 text-xs font-medium px-4 py-2 rounded transition-all">
+                                        Connect
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white rounded-lg shadow-sm lead-row group">
+                                <td class="p-4 rounded-l-lg border-y border-l border-slate-100">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded bg-white border border-slate-200 flex items-center justify-center p-1">
+                                            <i class="fa-solid fa-dna text-purple-600 text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 text-sm">Boston Scientific</h4>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="badge-new text-[10px] font-bold px-1.5 py-0.5 rounded">New Opp</span>
+                                                <span class="text-[10px] text-slate-400">Marlborough, MA</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-1.5 text-xs text-slate-700">
+                                            <i class="fa-solid fa-bolt text-yellow-500 text-[10px]"></i>
+                                            <span class="font-medium">Gap Analysis</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-500 leading-snug">
+                                            Missing portfolio coverage in "Poroelastic" tech vs Medtronic.
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-200">
+                                            <img src="https://i.pravatar.cc/150?img=33" class="rounded-full w-full h-full">
+                                        </div>
+                                        <div>
+                                            <div class="text-xs font-bold text-slate-900">Dr. Alan Grant</div>
+                                            <div class="text-[10px] text-slate-500">SVP, Technology</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4 border-y border-slate-100">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                                        <span class="text-xs font-semibold text-slate-500">Cold</span>
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 mt-0.5">
+                                        No prior engagement
+                                    </div>
+                                </td>
+                                <td class="p-4 rounded-r-lg border-y border-r border-slate-100 text-right">
+                                    <button class="bg-white border border-slate-300 hover:border-utah-red hover:text-utah-red text-slate-600 text-xs font-medium px-4 py-2 rounded transition-all">
+                                        Connect
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="fixed bottom-8 right-8 z-50">
+                        <div class="bg-brand-black text-white p-4 rounded-xl shadow-float max-w-sm border border-slate-700">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    </span>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Enginuity AI Agent</span>
+                                </div>
+                                <button class="text-slate-500 hover:text-white"><i class="fa-solid fa-times"></i></button>
+                            </div>
+                            <p class="text-sm font-medium mb-3">
+                                I found <span class="text-green-400">3 new decision makers</span> at Medtronic who are alumni of U of Utah. Should I draft an intro email referencing Dr. Jenkins' work?
+                            </p>
+                            <div class="flex gap-2">
+                                <button class="flex-1 bg-utah-red hover:bg-red-700 text-white text-xs font-bold py-2 rounded transition">Yes, Draft It</button>
+                                <button class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2 rounded transition">Dismiss</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>
