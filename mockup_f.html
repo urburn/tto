@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Innovation & Demand Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .drag-active {
+            border-color: #3b82f6 !important;
+            background-color: #eff6ff !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <div class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-white transition-transform transform -translate-x-full md:translate-x-0 z-50">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-xl font-bold tracking-wider"><i class="fa-solid fa-chart-line mr-2"></i> DEMAND<span class="text-blue-400">BOARD</span></h1>
+            <p class="text-xs text-slate-400 mt-1">Open Data Intelligence</p>
+        </div>
+        <nav class="mt-6">
+            <a href="#" class="block py-3 px-6 bg-blue-600 border-l-4 border-blue-400 text-white"><i class="fa-solid fa-layer-group w-6"></i> Dashboard</a>
+            <a href="#" class="block py-3 px-6 text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-upload w-6"></i> Portfolio Import</a>
+            <a href="#" class="block py-3 px-6 text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-globe w-6"></i> Market Sources</a>
+            <a href="#" class="block py-3 px-6 text-slate-400 hover:bg-slate-800 hover:text-white transition"><i class="fa-solid fa-gear w-6"></i> Settings</a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-6 bg-slate-800">
+            <div class="flex items-center">
+                <div class="w-2 h-2 rounded-full bg-green-400 mr-2 animate-pulse"></div>
+                <span class="text-xs text-slate-300">API Status: Connected</span>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-1">Source: PatentsView / OpenAlex</p>
+        </div>
+    </div>
+
+    <div class="md:ml-64 min-h-screen p-6 md:p-8 transition-all">
+        
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800">Portfolio Analysis</h2>
+                <p class="text-sm text-slate-500">Visualizing market demand for your technology assets</p>
+            </div>
+            <button onclick="loadDemoData()" class="bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-lg text-sm shadow-sm transition">
+                <i class="fa-solid fa-bolt mr-2 text-yellow-500"></i> Load Demo Data
+            </button>
+        </header>
+
+        <div id="upload-zone" class="mb-8 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-white transition-colors cursor-pointer hover:border-blue-400 group">
+            <div class="pointer-events-none">
+                <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-300 group-hover:text-blue-400 mb-3 transition"></i>
+                <h3 class="text-lg font-semibold text-slate-700">Upload Technology Portfolio</h3>
+                <p class="text-sm text-slate-500 mb-4">Drag & drop CSV or JSON file here</p>
+                <span class="inline-block bg-slate-100 text-slate-600 px-3 py-1 rounded text-xs">Supported: .csv, .json</span>
+            </div>
+            <input type="file" id="fileInput" class="hidden" accept=".csv,.json">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-panel p-5 rounded-xl shadow-sm border-l-4 border-blue-500">
+                <p class="text-xs font-bold text-slate-400 uppercase">Total Assets</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-1" id="metric-assets">0</h3>
+            </div>
+            <div class="glass-panel p-5 rounded-xl shadow-sm border-l-4 border-emerald-500">
+                <p class="text-xs font-bold text-slate-400 uppercase">Avg. Market Demand</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-1" id="metric-demand">0%</h3>
+            </div>
+            <div class="glass-panel p-5 rounded-xl shadow-sm border-l-4 border-purple-500">
+                <p class="text-xs font-bold text-slate-400 uppercase">Patent Growth (YoY)</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-1" id="metric-growth">+0%</h3>
+            </div>
+            <div class="glass-panel p-5 rounded-xl shadow-sm border-l-4 border-amber-500">
+                <p class="text-xs font-bold text-slate-400 uppercase">Tech Readiness</p>
+                <h3 class="text-3xl font-bold text-slate-800 mt-1" id="metric-trl">TRL 0</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="glass-panel p-6 rounded-xl shadow-sm lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-700">Market Demand Trends (5 Years)</h3>
+                    <select class="text-xs bg-slate-100 border-none rounded p-1">
+                        <option>Global Data</option>
+                        <option>US Only</option>
+                        <option>EU Only</option>
+                    </select>
+                </div>
+                <div class="h-64">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl shadow-sm">
+                <h3 class="font-bold text-slate-700 mb-4">Portfolio Balance</h3>
+                <div class="h-64">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="glass-panel p-6 rounded-xl shadow-sm">
+                <h3 class="font-bold text-slate-700 mb-4">Market Gap Analysis</h3>
+                <p class="text-xs text-slate-500 mb-2">X: Competition Density | Y: Market Demand | Size: Investment Potential</p>
+                <div class="h-64">
+                    <canvas id="bubbleChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-xl shadow-sm overflow-hidden">
+                <h3 class="font-bold text-slate-700 mb-4">Asset Details</h3>
+                <div class="overflow-x-auto h-64">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-slate-400 uppercase bg-slate-50 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2">Technology</th>
+                                <th class="px-4 py-2">Sector</th>
+                                <th class="px-4 py-2">Demand Score</th>
+                                <th class="px-4 py-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsTableBody" class="divide-y divide-slate-100">
+                            <tr><td colspan="4" class="p-4 text-center text-slate-400">No data loaded</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. State Management ---
+        let trendChart, radarChart, bubbleChart;
+        
+        // --- 2. Mock Data Generator (Simulating Open Data API) ---
+        // In a real app, this would fetch from PatentsView, OpenAlex, or Google Trends API.
+        function generateMarketData(portfolio) {
+            const sectors = {};
+            const trends = { labels: ['2021', '2022', '2023', '2024', '2025'], datasets: [] };
+            const bubbleData = [];
+            
+            portfolio.forEach((item, index) => {
+                // Simulate Demand Score (0-100)
+                const demandScore = Math.floor(Math.random() * 40) + 60; 
+                // Simulate Competition (0-100)
+                const competition = Math.floor(Math.random() * 90) + 10;
+                // Simulate TRL (1-9)
+                const trl = Math.floor(Math.random() * 5) + 4;
+
+                // Prepare Bubble Data
+                bubbleData.push({
+                    x: competition,
+                    y: demandScore,
+                    r: trl * 2, // Bubble size based on TRL
+                    label: item.name
+                });
+
+                // Prepare Trend Data (Random walk simulation)
+                const data = [50];
+                for(let i=1; i<5; i++) data.push(data[i-1] + (Math.random() * 20 - 5));
+                
+                if (index < 5) { // Only graph top 5 on line chart to avoid clutter
+                    trends.datasets.push({
+                        label: item.name,
+                        data: data,
+                        borderColor: `hsl(${index * 60}, 70%, 50%)`,
+                        tension: 0.4,
+                        fill: false
+                    });
+                }
+
+                // Sector Aggregation
+                if (!sectors[item.category]) sectors[item.category] = 0;
+                sectors[item.category]++;
+            });
+
+            return { trends, bubbleData, sectors, raw: portfolio };
+        }
+
+        // --- 3. Chart Initialization ---
+        function initCharts(data) {
+            // Destroy old charts if they exist
+            if (trendChart) trendChart.destroy();
+            if (radarChart) radarChart.destroy();
+            if (bubbleChart) bubbleChart.destroy();
+
+            // 1. Line Chart (Trends)
+            const ctxTrend = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(ctxTrend, {
+                type: 'line',
+                data: data.trends,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: false } }
+                }
+            });
+
+            // 2. Radar Chart (Portfolio Balance)
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: Object.keys(data.sectors),
+                    datasets: [{
+                        label: 'Portfolio Density',
+                        data: Object.values(data.sectors),
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // 3. Bubble Chart (Gap Analysis)
+            const ctxBubble = document.getElementById('bubbleChart').getContext('2d');
+            bubbleChart = new Chart(ctxBubble, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Tech Assets',
+                        data: data.bubbleData,
+                        backgroundColor: 'rgba(236, 72, 153, 0.6)',
+                        borderColor: 'rgba(236, 72, 153, 1)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label + ` (Comp: ${context.raw.x}, Demand: ${context.raw.y})`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Competition Density' } },
+                        y: { title: { display: true, text: 'Market Demand Index' } }
+                    }
+                }
+            });
+
+            // Update Metrics & Table
+            updateDashboardUI(data);
+        }
+
+        // --- 4. UI Updates ---
+        function updateDashboardUI(data) {
+            // Metrics
+            document.getElementById('metric-assets').innerText = data.raw.length;
+            document.getElementById('metric-demand').innerText = "84%"; // Mock avg
+            document.getElementById('metric-growth').innerText = "+12%"; // Mock
+            document.getElementById('metric-trl').innerText = "TRL 6.2"; // Mock
+
+            // Table
+            const tbody = document.getElementById('assetsTableBody');
+            tbody.innerHTML = '';
+            data.raw.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-medium text-slate-700">${item.name}</td>
+                    <td class="px-4 py-3 text-slate-500"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">${item.category}</span></td>
+                    <td class="px-4 py-3">
+                        <div class="w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-green-500 h-2.5 rounded-full" style="width: ${Math.floor(Math.random()*40+60)}%"></div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-slate-500 text-xs">Active</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 5. Interaction Handlers ---
+        
+        // Drag & Drop
+        const dropZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-active');
+        });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-active'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-active');
+            // In a real app, parse file here (PapaParse for CSV).
+            // For now, we simulate success.
+            loadDemoData(); 
+        });
+
+        function loadDemoData() {
+            // Sample Data
+            const demoPortfolio = [
+                { name: "Solid State Battery", category: "Energy" },
+                { name: "CRISPR Gene Editing", category: "Biotech" },
+                { name: "Quantum Encryption", category: "Cybersecurity" },
+                { name: "Generative AI Model", category: "AI/ML" },
+                { name: "Carbon Capture Matrix", category: "CleanTech" },
+                { name: "Autonomous Lidar", category: "Automotive" },
+                { name: "Neural Link Interface", category: "Biotech" },
+                { name: "Graphene Semiconductor", category: "Hardware" }
+            ];
+            
+            const processedData = generateMarketData(demoPortfolio);
+            initCharts(processedData);
+        }
+    </script>
+</body>
+</html>

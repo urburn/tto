@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patent Demand Intelligence | Strategic Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Glassmorphism utility */
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        
+        /* Animation for side panel */
+        .slide-enter { transform: translateX(100%); }
+        .slide-enter-active { transform: translateX(0); transition: transform 0.3s ease-out; }
+        .slide-exit { transform: translateX(0); }
+        .slide-exit-active { transform: translateX(100%); transition: transform 0.3s ease-in; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden">
+
+    <aside class="w-80 bg-white border-r border-slate-200 flex flex-col z-20 shadow-lg">
+        <div class="p-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg"><i class="fa-solid fa-chart-network"></i></div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-800 tracking-tight">Enginuity</h1>
+                    <p class="text-xs text-slate-400 font-medium">Demand Signal Analytics</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+            <div>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Demand Data Sources</h3>
+                <div class="space-y-3" id="sourceFilters">
+                    <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" checked value="grants" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
+                        <div class="flex-1">
+                            <span class="block text-sm font-semibold text-slate-700">Public & Grants</span>
+                            <span class="text-[10px] text-slate-500">SBIR, Horizon, NIH</span>
+                        </div>
+                        <i class="fa-solid fa-building-columns text-slate-300"></i>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" checked value="vc" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500 border-gray-300">
+                        <div class="flex-1">
+                            <span class="block text-sm font-semibold text-slate-700">Private Equity / VC</span>
+                            <span class="text-[10px] text-slate-500">Pitchbook, Crunchbase</span>
+                        </div>
+                        <i class="fa-solid fa-money-bill-trend-up text-slate-300"></i>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" checked value="news" class="w-4 h-4 text-green-600 rounded focus:ring-green-500 border-gray-300">
+                        <div class="flex-1">
+                            <span class="block text-sm font-semibold text-slate-700">News & Sentiment</span>
+                            <span class="text-[10px] text-slate-500">Global Tech Analysis</span>
+                        </div>
+                        <i class="fa-solid fa-newspaper text-slate-300"></i>
+                    </label>
+
+                    <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 cursor-pointer transition-all">
+                        <input type="checkbox" checked value="challenges" class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500 border-gray-300">
+                        <div class="flex-1">
+                            <span class="block text-sm font-semibold text-slate-700">Corp. Challenges</span>
+                            <span class="text-[10px] text-slate-500">Open Innovation RFPs</span>
+                        </div>
+                        <i class="fa-solid fa-handshake text-slate-300"></i>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Market Scope Filters</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-1 block">Time Horizon</label>
+                        <select class="w-full text-sm bg-slate-50 border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option>Last 12 Months (Trending)</option>
+                            <option>Last 3 Years (Strategic)</option>
+                            <option>Last 5 Years (Historical)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-1 block">Target Geography</label>
+                        <select class="w-full text-sm bg-slate-50 border border-slate-200 rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option>Global (All Regions)</option>
+                            <option>North America</option>
+                            <option>EMEA</option>
+                            <option>APAC</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-slate-200 bg-slate-50">
+            <button class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition shadow-lg shadow-slate-200 flex justify-center items-center gap-2">
+                <i class="fa-solid fa-bolt"></i> Generate Insights
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+        <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 shrink-0">
+            <h2 class="font-bold text-xl text-slate-800">Portfolio Demand Overview</h2>
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-semibold px-3 py-1 bg-green-100 text-green-700 rounded-full border border-green-200">
+                    <i class="fa-solid fa-circle text-[8px] mr-1"></i> Live Market Data
+                </span>
+                <div class="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">JD</div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-8">
+            
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-slate-700 text-sm">Growth vs. Investment Matrix</h4>
+                        <button class="text-slate-400 hover:text-blue-600"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+                    <div class="h-48 relative">
+                        <canvas id="matrixChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-slate-700 text-sm">Demand by Theme</h4>
+                        <button class="text-slate-400 hover:text-blue-600"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+                    <div class="h-48 relative">
+                        <canvas id="themeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                    <h4 class="font-bold text-slate-700 text-sm mb-4">Regional Intensity Heatmap</h4>
+                    <div class="flex-1 flex flex-col justify-center gap-1 text-xs">
+                        <div class="grid grid-cols-4 gap-1 text-center font-bold text-slate-400 mb-1">
+                            <span></span><span>NA</span><span>EU</span><span>AS</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1 items-center">
+                            <span class="font-semibold text-slate-600 text-right pr-2">AI</span>
+                            <div class="bg-red-500 h-6 rounded text-white flex items-center justify-center opacity-90">Hi</div>
+                            <div class="bg-orange-300 h-6 rounded"></div>
+                            <div class="bg-red-600 h-6 rounded text-white flex items-center justify-center">Hi</div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1 items-center">
+                            <span class="font-semibold text-slate-600 text-right pr-2">Bio</span>
+                            <div class="bg-orange-400 h-6 rounded text-white flex items-center justify-center opacity-80">Md</div>
+                            <div class="bg-red-500 h-6 rounded text-white flex items-center justify-center">Hi</div>
+                            <div class="bg-green-200 h-6 rounded"></div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1 items-center">
+                            <span class="font-semibold text-slate-600 text-right pr-2">Auto</span>
+                            <div class="bg-green-200 h-6 rounded"></div>
+                            <div class="bg-orange-400 h-6 rounded"></div>
+                            <div class="bg-orange-300 h-6 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="font-bold text-slate-800">Top Opportunities</h3>
+                    <div class="flex gap-2">
+                        <span class="text-xs text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded">Sorted by: <strong>Demand Score</strong></span>
+                    </div>
+                </div>
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-xs font-bold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100">
+                            <th class="px-6 py-3">Patent / Asset</th>
+                            <th class="px-6 py-3">Tech Category</th>
+                            <th class="px-6 py-3">Top Signal</th>
+                            <th class="px-6 py-3 text-center">Market Score</th>
+                            <th class="px-6 py-3 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100" id="patentTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="slideOverBackdrop" class="fixed inset-0 bg-slate-900/20 z-30 hidden backdrop-blur-sm transition-opacity" onclick="closeReport()"></div>
+    
+    <div id="slideOverPanel" class="fixed inset-y-0 right-0 w-[600px] bg-white shadow-2xl z-40 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-6 border-b border-slate-200 flex justify-between items-start bg-slate-50">
+            <div>
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100 mb-2 inline-block" id="reportTechArea">TECH AREA</span>
+                <h2 class="text-2xl font-bold text-slate-800 leading-tight" id="reportTitle">Patent Title</h2>
+                <p class="text-sm text-slate-500 font-mono mt-1" id="reportId">US-XXXX-XXX</p>
+            </div>
+            <button onclick="closeReport()" class="text-slate-400 hover:text-slate-700 bg-white p-2 rounded-full border border-slate-200 shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-8 bg-white">
+            
+            <section class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fa-solid fa-chess-queen text-6xl text-blue-600"></i></div>
+                <h3 class="font-bold text-blue-900 text-sm uppercase mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye"></i> Recommended Future Strategy
+                </h3>
+                <p class="text-lg font-bold text-slate-800 mb-2" id="reportStrategyTitle">Licensing Opportunity</p>
+                <p class="text-sm text-slate-600 leading-relaxed" id="reportStrategyDesc">...</p>
+            </section>
+
+            <section class="flex items-center gap-6">
+                <div class="flex-1">
+                    <h3 class="font-bold text-slate-400 text-xs uppercase mb-2">Aggregate Demand Level</h3>
+                    <div class="h-4 bg-slate-100 rounded-full overflow-hidden flex">
+                        <div id="reportProgressBar" class="bg-gradient-to-r from-green-400 to-green-600 w-3/4 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <span class="block text-3xl font-black text-slate-800" id="reportScore">92</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">/100 Score</span>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">Evidence by Signal Source</h3>
+                <div class="space-y-4" id="reportEvidenceContainer">
+                    </div>
+            </section>
+
+            <section class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                <h3 class="font-bold text-slate-700 text-sm mb-2">Why is this the Top Signal?</h3>
+                <p class="text-sm text-slate-600 italic" id="reportReasoning">...</p>
+            </section>
+
+        </div>
+        
+        <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button class="px-4 py-2 bg-white border border-slate-300 text-slate-600 font-semibold rounded-lg text-sm hover:bg-slate-50">Download PDF</button>
+            <button class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg text-sm hover:bg-blue-700 shadow-md">Initiate Action</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. MOCK DATA ---
+        const patents = [
+            {
+                id: "US-11,234,567-B2",
+                title: "Solid-State Electrolyte for High-Density EV Batteries",
+                tech: "Energy Storage",
+                subtopic: "Solid State",
+                score: 96,
+                demandLevel: "Critical",
+                topSignal: "VC Funding",
+                strategyTitle: "Strategic Licensing / JV",
+                strategyDesc: "Market conditions are ripe for a Joint Venture with Tier-1 Automotive OEMs. Avoid pure patent sale; retain IP rights for next-gen iteration.",
+                reasoning: "The convergence of massive Series C rounds in battery tech and new EU regulations creates a perfect storm for this asset.",
+                evidence: [
+                    { type: "VC", score: "High", icon: "fa-money-bill-trend-up", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", text: "Over $2.1B invested in Solid State startups in Q3 2025 alone (Pitchbook)." },
+                    { type: "Grants", score: "Medium", icon: "fa-building-columns", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", text: "Qualified for DOE 'Clean Energy' fast-track funding." },
+                    { type: "News", score: "High", icon: "fa-newspaper", color: "text-green-600", bg: "bg-green-50", border: "border-green-100", text: "Major recall of liquid-electrolyte batteries drives safety sentiment." },
+                    { type: "Corp", score: "Medium", icon: "fa-handshake", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-100", text: "Ford & BMW open innovation calls for 'Battery Safety'." }
+                ]
+            },
+            {
+                id: "EP-9,882,101-A1",
+                title: "Homomorphic Encryption for Cloud Health Data",
+                tech: "Cybersecurity",
+                subtopic: "Privacy Preserving Compute",
+                score: 88,
+                demandLevel: "High",
+                topSignal: "Corp. Challenges",
+                strategyTitle: "Partnership / Co-Development",
+                strategyDesc: "Engage with hyperscalers (AWS/Azure) who have open challenges for privacy-preserving computation.",
+                reasoning: "While VC funding has cooled, corporate demand is spiking due to new AI privacy regulations.",
+                evidence: [
+                    { type: "VC", score: "Low", icon: "fa-money-bill-trend-up", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", text: "VC interest flatlined in 2024." },
+                    { type: "Grants", score: "High", icon: "fa-building-columns", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-100", text: "NIH awarding huge grants for AI-ready secure medical data pipelines." },
+                    { type: "Corp", score: "Critical", icon: "fa-handshake", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-100", text: "Winning topic in 3 separate Pharma innovation challenges." }
+                ]
+            },
+            {
+                id: "US-8,442,119-B1",
+                title: "Micro-LED Display Fabrication Method",
+                tech: "Semiconductors",
+                subtopic: "Display Tech",
+                score: 74,
+                demandLevel: "Medium",
+                topSignal: "News Trends",
+                strategyTitle: "Defensive Hold / Monitor",
+                strategyDesc: "Technology is promising but manufacturing costs remain prohibitive. Maintain for 12 months.",
+                reasoning: "News sentiment is positive (Apple Watch rumors), but capital investment hasn't followed yet.",
+                evidence: [
+                    { type: "VC", score: "Medium", icon: "fa-money-bill-trend-up", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100", text: "Moderate steady investment." },
+                    { type: "News", score: "High", icon: "fa-newspaper", color: "text-green-600", bg: "bg-green-50", border: "border-green-100", text: "High volume of articles regarding Micro-LED vs OLED." }
+                ]
+            }
+        ];
+
+        // --- 2. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initMatrixChart();
+            initThemeChart();
+            renderTable();
+        });
+
+        // --- 3. CHARTS ---
+        function initMatrixChart() {
+            const ctx = document.getElementById('matrixChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Patents',
+                        data: [{x: 85, y: 92}, {x: 45, y: 80}, {x: 60, y: 30}, {x: 20, y: 40}, {x: 75, y: 65}],
+                        backgroundColor: (ctx) => {
+                            const val = ctx.raw?.y;
+                            return val > 80 ? '#22c55e' : val > 50 ? '#3b82f6' : '#94a3b8';
+                        },
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { title: { display: true, text: 'Total Investment Volume ($)' }, grid: { display: false } },
+                        y: { title: { display: true, text: 'Market Growth Rate (%)' }, min: 0, max: 100 }
+                    }
+                }
+            });
+        }
+
+        function initThemeChart() {
+            const ctx = document.getElementById('themeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Energy', 'Cybersec', 'Semis', 'BioTech'],
+                    datasets: [{
+                        label: 'Demand',
+                        data: [95, 88, 74, 60],
+                        backgroundColor: ['#3b82f6', '#6366f1', '#a855f7', '#ec4899'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        // --- 4. RENDER TABLE ---
+        function renderTable() {
+            const tbody = document.getElementById('patentTableBody');
+            tbody.innerHTML = patents.map(p => `
+                <tr class="hover:bg-blue-50/50 transition cursor-pointer group" onclick="openReport('${p.id}')">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-slate-800 group-hover:text-blue-600 transition">${p.id}</div>
+                        <div class="text-xs text-slate-500 truncate w-48">${p.title}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                            ${p.tech}
+                        </span>
+                        <div class="text-[10px] text-slate-400 mt-1">${p.subtopic}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-slate-600">
+                        ${p.topSignal}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-lg font-bold ${p.score > 90 ? 'text-green-600' : 'text-blue-600'}">${p.score}</span>
+                            <div class="w-16 h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+                                <div class="h-full ${p.score > 90 ? 'bg-green-500' : 'bg-blue-500'}" style="width: ${p.score}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-blue-600 hover:text-blue-800 font-semibold text-xs border border-blue-200 hover:border-blue-400 bg-white px-3 py-1.5 rounded transition">
+                            Analysis
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- 5. REPORT PANEL LOGIC ---
+        function openReport(id) {
+            const p = patents.find(item => item.id === id);
+            if(!p) return;
+
+            // Populate static fields
+            document.getElementById('reportId').innerText = p.id;
+            document.getElementById('reportTitle').innerText = p.title;
+            document.getElementById('reportTechArea').innerText = p.tech;
+            document.getElementById('reportStrategyTitle').innerText = p.strategyTitle;
+            document.getElementById('reportStrategyDesc').innerText = p.strategyDesc;
+            document.getElementById('reportReasoning').innerText = p.reasoning;
+            
+            // Populate Score
+            document.getElementById('reportScore').innerText = p.score;
+            document.getElementById('reportProgressBar').style.width = `${p.score}%`;
+
+            // Generate Evidence Cards
+            const evidenceContainer = document.getElementById('reportEvidenceContainer');
+            evidenceContainer.innerHTML = p.evidence.map(e => `
+                <div class="flex gap-4 p-4 rounded-lg border ${e.border} ${e.bg}">
+                    <div class="flex-shrink-0 mt-1">
+                        <i class="fa-solid ${e.icon} ${e.color}"></i>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-sm text-slate-700">${e.type}</h4>
+                            <span class="text-[10px] font-bold uppercase tracking-wider ${e.color}">${e.score} MATCH</span>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-snug">${e.text}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Slide In
+            const panel = document.getElementById('slideOverPanel');
+            const backdrop = document.getElementById('slideOverBackdrop');
+            backdrop.classList.remove('hidden');
+            setTimeout(() => {
+                panel.classList.remove('translate-x-full'); 
+                backdrop.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeReport() {
+            const panel = document.getElementById('slideOverPanel');
+            const backdrop = document.getElementById('slideOverBackdrop');
+            panel.classList.add('translate-x-full');
+            backdrop.classList.add('opacity-0'); // Fade out
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>

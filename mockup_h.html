@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commercial Opportunity Scoring Dashboard | Enginuity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary Colors */
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            
+            /* Secondary Colors */
+            --blue: #D8F0FF;
+            --blue-2: #B8F5FF;
+            --yellow: #FFFDC2;
+            --yellow-2: #FFE78F;
+            --green: #DCF6E7;
+            --green-2: #93FBD3;
+            --orange: #F9BD97;
+            --orange-2: #FF8652;
+            --purple: #9D93EA;
+            --pink: #E9C7FF;
+            --sage: #BFE5D9;
+            --peach: #FFEDE0;
+            
+            /* Grays */
+            --gray-1: #F9F9F9;
+            --gray-2: #F3F3F3;
+            --gray-3: #E5E5E5;
+            --gray-4: #D1D1D1;
+            --gray-5: #B8B8B8;
+            --gray-6: #8A8A8A;
+            --gray-7: #5C5C5C;
+            --gray-8: #393939;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #D8F0FF 0%, #FFFDC2 50%, #F9BD97 100%);
+            background-attachment: fixed;
+            color: var(--primary-black);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--primary-white);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-3);
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* The Node Symbol */
+        .node-symbol {
+            width: 48px;
+            height: 48px;
+            position: relative;
+        }
+
+        .node-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        /* Positioning for the node dots to create the circular pattern */
+        .node-dot:nth-child(1) { top: 21px; left: 6px; }
+        .node-dot:nth-child(2) { top: 15px; left: 12px; }
+        .node-dot:nth-child(3) { top: 21px; left: 18px; }
+        .node-dot:nth-child(4) { top: 27px; left: 12px; }
+        .node-dot:nth-child(5) { top: 9px; left: 18px; }
+        .node-dot:nth-child(6) { top: 15px; left: 24px; }
+        .node-dot:nth-child(7) { top: 21px; left: 30px; }
+        .node-dot:nth-child(8) { top: 27px; left: 24px; }
+        .node-dot:nth-child(9) { top: 33px; left: 18px; }
+        .node-dot:nth-child(10) { top: 9px; left: 30px; }
+        .node-dot:nth-child(11) { top: 15px; left: 36px; }
+        .node-dot:nth-child(12) { top: 21px; left: 42px; }
+        .node-dot:nth-child(13) { top: 27px; left: 36px; }
+        .node-dot:nth-child(14) { top: 33px; left: 30px; }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary-black);
+            font-size: 1.75rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle {
+            color: var(--gray-7);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            font-weight: 300;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary-black);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background: var(--gray-8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: var(--primary-white);
+            color: var(--primary-black);
+            border: 1px solid var(--gray-3);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-1);
+            border-color: var(--gray-4);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--gray-1) 0%, var(--primary-white) 100%);
+            border: 1px solid var(--gray-3);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: var(--green-2);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* Filters */
+        .filters-section {
+            background: var(--primary-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .filters-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-black);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            color: var(--gray-7);
+            font-weight: 500;
+        }
+
+        select, input {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-3);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            background: var(--primary-white);
+            transition: all 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-black);
+            box-shadow: 0 0 0 3px var(--gray-2);
+        }
+
+        /* Asset Table */
+        .assets-section {
+            background: var(--primary-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            font-weight: 600;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-3);
+            background: var(--primary-white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .view-btn.active {
+            background: var(--primary-black);
+            color: var(--primary-white);
+            border-color: var(--primary-black);
+        }
+
+        .asset-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .asset-table thead {
+            background: var(--gray-1);
+        }
+
+        .asset-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--gray-8);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gray-3);
+        }
+
+        .asset-table tbody tr {
+            border-bottom: 1px solid var(--gray-2);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .asset-table tbody tr:hover {
+            background: var(--gray-1);
+        }
+
+        .asset-table td {
+            padding: 1.25rem 1rem;
+        }
+
+        .asset-title {
+            font-weight: 500;
+            color: var(--primary-black);
+            margin-bottom: 0.25rem;
+        }
+
+        .asset-meta {
+            font-size: 0.85rem;
+            color: var(--gray-6);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-weight: 300;
+        }
+
+        .asset-type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-patent {
+            background: var(--blue);
+            color: var(--primary-black);
+        }
+
+        .badge-research {
+            background: var(--pink);
+            color: var(--primary-black);
+        }
+
+        .badge-expertise {
+            background: var(--yellow);
+            color: var(--primary-black);
+        }
+
+        .badge-license {
+            background: var(--green);
+            color: var(--primary-black);
+        }
+
+        /* Score Display */
+        .score-display {
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .score-critical { color: var(--orange-2); }
+        .score-high { color: var(--green-2); }
+        .score-moderate { color: var(--yellow-2); }
+        .score-low { color: var(--gray-6); }
+
+        .score-label {
+            font-size: 0.7rem;
+            color: var(--gray-6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--gray-2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .score-fill.critical { background: var(--orange-2); }
+        .score-fill.high { background: var(--green-2); }
+        .score-fill.moderate { background: var(--yellow-2); }
+        .score-fill.low { background: var(--gray-6); }
+
+        /* Dimensions Preview */
+        .dimensions-preview {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .dimension-chip {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            background: var(--gray-1);
+            color: var(--gray-8);
+            border: 1px solid var(--gray-3);
+            font-weight: 400;
+        }
+
+        .dimension-chip strong {
+            color: var(--primary-black);
+            font-weight: 600;
+        }
+
+        /* Time to Opportunity */
+        .time-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-8);
+            font-weight: 400;
+        }
+
+        .time-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .time-short { background: var(--green-2); }
+        .time-medium { background: var(--yellow-2); }
+        .time-long { background: var(--gray-6); }
+
+        /* Source Indicator */
+        .source-indicator {
+            font-size: 0.75rem;
+            color: var(--gray-6);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 400;
+        }
+
+        .source-indicator::before {
+            content: '◆';
+            font-size: 0.6rem;
+            color: var(--orange);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--primary-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .sidebar-title {
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        /* Weight Adjustment */
+        .weight-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .weight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .weight-name {
+            font-size: 0.85rem;
+            color: var(--gray-8);
+            font-weight: 400;
+        }
+
+        .weight-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-black);
+        }
+
+        .weight-slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--gray-2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-black);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .weight-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary-black);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .weight-presets {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-3);
+        }
+
+        .preset-btn {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-3);
+            background: var(--primary-white);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            text-align: left;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary-black);
+            background: var(--gray-1);
+        }
+
+        /* Insights Card */
+        .insights-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .insight-item {
+            padding: 1rem;
+            background: var(--gray-1);
+            border-left: 3px solid var(--primary-black);
+            border-radius: 6px;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .insight-text {
+            font-size: 0.85rem;
+            color: var(--gray-7);
+            font-weight: 300;
+        }
+
+        /* Action Button */
+        .drill-down-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-black);
+            color: var(--primary-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .drill-down-btn:hover {
+            background: var(--gray-8);
+            transform: scale(1.02);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .asset-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="header-top">
+                <div class="logo-title">
+                    <div class="node-symbol">
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                        <div class="node-dot"></div>
+                    </div>
+                    <div>
+                        <h1>Commercial Opportunity Scoring</h1>
+                        <div class="subtitle">University Technology Transfer Intelligence Platform</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">📊 Generate Report</button>
+                    <button class="btn btn-primary">Settings</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Active Assets</div>
+                    <div class="stat-change">↑ 3 this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">£4.2M</div>
+                    <div class="stat-label">Potential Value</div>
+                    <div class="stat-change">↑ £850K</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Matched Grants</div>
+                    <div class="stat-change">5 deadlines < 60 days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">73</div>
+                    <div class="stat-label">Avg. Portfolio Score</div>
+                    <div class="stat-change">↑ 8 points</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filters-title">Filter & Sort Assets</div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Asset Type</label>
+                    <select>
+                        <option>All Types</option>
+                        <option>Patent/IP</option>
+                        <option>Research Proposal</option>
+                        <option>Faculty Expertise</option>
+                        <option>Licensed Technology</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Discipline</label>
+                    <select>
+                        <option>All Disciplines</option>
+                        <option>Life Sciences</option>
+                        <option>Engineering</option>
+                        <option>Physical Sciences</option>
+                        <option>Computer Science</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Score Range</label>
+                    <select>
+                        <option>All Scores</option>
+                        <option>Critical (80-100)</option>
+                        <option>High (60-79)</option>
+                        <option>Moderate (40-59)</option>
+                        <option>Low (0-39)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Search</label>
+                    <input type="text" placeholder="Search assets, faculty, keywords...">
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Assets Table -->
+            <div class="assets-section">
+                <div class="section-header">
+                    <h2 class="section-title">Innovation Portfolio</h2>
+                    <div class="view-toggle">
+                        <button class="view-btn active">Table</button>
+                        <button class="view-btn">Cards</button>
+                        <button class="view-btn">Chart</button>
+                    </div>
+                </div>
+
+                <table class="asset-table">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th style="text-align: center;">Composite Score</th>
+                            <th>Key Dimensions</th>
+                            <th>Time to Opp.</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="asset-title">CRISPR-based Gene Therapy for Muscular Dystrophy</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-patent">Patent/IP</span>
+                                    <span>Life Sciences</span>
+                                    <span>Dr. Sarah Chen, Prof. Michael Torres</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">3 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-critical">87</div>
+                                    <div class="score-label">Critical</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill critical" style="width: 87%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Market: <strong>92</strong></div>
+                                    <div class="dimension-chip">Funding: <strong>90</strong></div>
+                                    <div class="dimension-chip">Position: <strong>85</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-medium"></span>
+                                    12 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="asset-title">AI-Powered Semiconductor Defect Detection</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-research">Research Proposal</span>
+                                    <span>Engineering</span>
+                                    <span>Dr. James Liu, Dr. Priya Patel</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">5 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-critical">84</div>
+                                    <div class="score-label">Critical</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill critical" style="width: 84%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Market: <strong>88</strong></div>
+                                    <div class="dimension-chip">Time: <strong>100</strong></div>
+                                    <div class="dimension-chip">Ready: <strong>75</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-short"></span>
+                                    4 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="asset-title">Sustainable Battery Recycling Process</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-patent">Patent/IP</span>
+                                    <span>Engineering</span>
+                                    <span>Prof. Elena Rodriguez</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">4 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-high">76</div>
+                                    <div class="score-label">High</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill high" style="width: 76%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Market: <strong>82</strong></div>
+                                    <div class="dimension-chip">Strategic: <strong>88</strong></div>
+                                    <div class="dimension-chip">Funding: <strong>78</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-short"></span>
+                                    6 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="asset-title">Quantum Computing Simulation Platform</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-expertise">Faculty Expertise</span>
+                                    <span>Computer Science</span>
+                                    <span>Dr. Marcus Zhang, Dr. Olivia Kim</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">2 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-high">71</div>
+                                    <div class="score-label">High</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill high" style="width: 71%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Position: <strong>85</strong></div>
+                                    <div class="dimension-chip">Market: <strong>70</strong></div>
+                                    <div class="dimension-chip">Funding: <strong>65</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-medium"></span>
+                                    15 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="asset-title">Biodegradable Packaging Material from Algae</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-license">Licensed Tech</span>
+                                    <span>Life Sciences</span>
+                                    <span>Dr. Amanda Foster</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">4 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-moderate">68</div>
+                                    <div class="score-label">Moderate</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill moderate" style="width: 68%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Strategic: <strong>82</strong></div>
+                                    <div class="dimension-chip">Time: <strong>75</strong></div>
+                                    <div class="dimension-chip">Market: <strong>60</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-short"></span>
+                                    8 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="asset-title">Medical Imaging Enhancement Algorithm</div>
+                                <div class="asset-meta">
+                                    <span class="asset-type-badge badge-patent">Patent/IP</span>
+                                    <span>Computer Science</span>
+                                    <span>Prof. David Chen</span>
+                                </div>
+                                <div class="source-indicator" style="margin-top: 0.5rem;">3 high-confidence sources</div>
+                            </td>
+                            <td>
+                                <div class="score-display">
+                                    <div class="score-value score-moderate">55</div>
+                                    <div class="score-label">Moderate</div>
+                                    <div class="score-bar">
+                                        <div class="score-fill moderate" style="width: 55%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="dimensions-preview">
+                                    <div class="dimension-chip">Ready: <strong>45</strong></div>
+                                    <div class="dimension-chip">Position: <strong>50</strong></div>
+                                    <div class="dimension-chip">Market: <strong>62</strong></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="time-indicator">
+                                    <span class="time-dot time-long"></span>
+                                    24 months
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="drill-down-btn">View Details →</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Weight Adjustment -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Adjust Scoring Weights</h3>
+                    
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Market Demand</span>
+                            <span class="weight-value">25%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="25">
+                    </div>
+
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Competitive Position</span>
+                            <span class="weight-value">20%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="20">
+                    </div>
+
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Funding Alignment</span>
+                            <span class="weight-value">20%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="20">
+                    </div>
+
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Time to Opportunity</span>
+                            <span class="weight-value">15%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="15">
+                    </div>
+
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Commercialization Ready</span>
+                            <span class="weight-value">10%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="10">
+                    </div>
+
+                    <div class="weight-item">
+                        <div class="weight-header">
+                            <span class="weight-name">Strategic Fit</span>
+                            <span class="weight-value">10%</span>
+                        </div>
+                        <input type="range" class="weight-slider" min="0" max="50" value="10">
+                    </div>
+
+                    <div class="weight-presets">
+                        <button class="preset-btn">Revenue-Focused</button>
+                        <button class="preset-btn">Quick Wins</button>
+                        <button class="preset-btn">Grant-Optimized</button>
+                        <button class="preset-btn">Reset to Default</button>
+                    </div>
+                </div>
+
+                <!-- Portfolio Insights -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Portfolio Insights</h3>
+                    <div class="insights-list">
+                        <div class="insight-item">
+                            <div class="insight-title">Top Performer</div>
+                            <div class="insight-text">CRISPR Gene Therapy leads with 87 score. 3 matched NIH grants closing in 45 days.</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-title">Emerging Opportunity</div>
+                            <div class="insight-text">AI Semiconductor Detection jumped 12 points this month on increased industry demand.</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-title">Action Required</div>
+                            <div class="insight-text">4 assets with scores below 50 may be pruning candidates. Review recommended.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

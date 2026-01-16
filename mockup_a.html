@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enginuity™ | Asset Strategic Deep-Dive: NP-702</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+
+        .pillar-active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .evidence-pill {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .trust-border {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .archetype-badge {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #f1f5f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5em 1.5em;
+        }
+    </style>
+    <!-- Chosen Palette: Deep Navy, Professional Blue, Emerald Green. Accents in Gold for "Academic Excellence". -->
+</head>
+<body class="antialiased">
+
+    <!-- Header Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="window.history.back()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-400">&larr;</button>
+                <h1 class="text-sm font-bold text-slate-900">ENGINUITY™ ASSET REPORT <span class="text-slate-400 font-normal px-2">/</span> <span class="text-blue-600">NP-702</span></h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span class="text-[10px] font-bold text-amber-700 uppercase tracking-tighter italic">ITAR / EAR Review Flagged</span>
+                </div>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-blue-200 hover:bg-blue-700">Export Partnership Brief</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1400px] mx-auto p-6 space-y-6">
+
+        <!-- VP MARKET SCOPE CONTROL PANEL -->
+        <section class="bg-slate-900 rounded-3xl p-6 text-white shadow-xl">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="flex-shrink-0 flex items-center gap-3 pr-6 border-r border-slate-700">
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-black">M</div>
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-blue-400">Market Scope</h3>
+                        <p class="text-[10px] text-slate-400">Scenario Modeling</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 flex-grow">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">Industry Vertical</label>
+                        <select id="scope-vertical" class="filter-select bg-slate-800 border border-slate-700 text-xs rounded-lg p-2 focus:ring-blue-500 outline-none">
+                            <option value="Defense">Defense & Aerospace</option>
+                            <option value="Compute">Quantum Computing</option>
+                            <option value="Energy">Energy & Grid</option>
+                            <option value="MedTech">Medical Imaging</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">Geographic Focus</label>
+                        <select id="scope-geo" class="filter-select bg-slate-800 border border-slate-700 text-xs rounded-lg p-2 focus:ring-blue-500 outline-none">
+                            <option value="Domestic">North America (US/CAN)</option>
+                            <option value="Global">Global (OECD)</option>
+                            <option value="Emerging">Emerging Markets</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">Corporate Tier</label>
+                        <select id="scope-tier" class="filter-select bg-slate-800 border border-slate-700 text-xs rounded-lg p-2 focus:ring-blue-500 outline-none">
+                            <option value="T1">Global F500 Corporates</option>
+                            <option value="Mid">Mid-Market Innovators</option>
+                            <option value="VC">VC-Backed Startups</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase">Commercial Intent</label>
+                        <select id="scope-intent" class="filter-select bg-slate-800 border border-slate-700 text-xs rounded-lg p-2 focus:ring-blue-500 outline-none">
+                            <option value="License">Corporate Licensing</option>
+                            <option value="Joint">Joint Venture / Spin-out</option>
+                            <option value="SRA">Strategic Research (SRA)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 pl-6 border-l border-slate-700 text-right hidden lg:block">
+                    <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Partner Match Count</p>
+                    <span id="partner-count" class="text-3xl font-black text-blue-400">12</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Asset Profile & Strategic Signature -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Basic Info Card -->
+            <div class="lg:col-span-4 glass-panel rounded-3xl p-8 trust-border flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 block">Strategic Signature</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-1">Solid-State Quantum Sensors</h2>
+                    <p class="text-sm text-slate-500 font-medium">Schwartz Quantum Lab | <span class="text-slate-900">Dr. Aris Thorne</span></p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="archetype-badge px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            Deep-Tech Moat
+                        </div>
+                        <div class="text-[32px] font-black text-slate-900 ml-auto leading-none">86.4</div>
+                    </div>
+                </div>
+                
+                <!-- Market Sizing Summary -->
+                <div class="mt-8 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-3">Addressable Market (2030 Proj)</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="font-bold text-slate-700 uppercase">TAM (Defense Sensors)</span>
+                                <span class="font-black">$14.2B</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1 rounded-full">
+                                <div id="tam-bar" class="bg-blue-600 h-1 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[11px] mb-1">
+                                <span class="font-bold text-slate-700 uppercase">SAM (Quantum Precision)</span>
+                                <span id="sam-value" class="font-black">$2.8B</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-1 rounded-full">
+                                <div id="sam-bar" class="bg-blue-400 h-1 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Radar & Market Fit Analysis -->
+            <div class="lg:col-span-8 glass-panel rounded-3xl p-8 bg-white flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2 flex flex-col items-center justify-center">
+                    <div class="chart-container" style="height: 260px;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="mt-4 flex gap-6">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-0.5 bg-blue-500"></span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">NP-702 Asset</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-0.5 bg-slate-300"></span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Sector Avg</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 border-l border-slate-100 md:pl-8 flex flex-col justify-center">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-widest mb-4">Strategic Insight</h3>
+                    <div class="space-y-5" id="insight-container">
+                        <!-- Insights dynamically updated based on filters -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The 5 Pillars: Deep Dive Tabs -->
+        <section class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            
+            <!-- Sidebar: Pillar Selector -->
+            <div class="xl:col-span-1 space-y-3">
+                <button onclick="switchTab('grants')" id="btn-grants" class="w-full text-left p-4 rounded-2xl border-2 glass-panel pillar-active transition-all group">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-800">1. Public Grants</span>
+                        <span class="text-xs font-black text-blue-600">98%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Technical validation via federal funding.</p>
+                </button>
+                <button onclick="switchTab('industry')" id="btn-industry" class="w-full text-left p-4 rounded-2xl border-2 glass-panel border-transparent hover:border-slate-200 transition-all">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-800">2. Industry Demand</span>
+                        <span class="text-xs font-black text-slate-400">91%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">CVC, M&A, and Partnership interest.</p>
+                </button>
+                <button onclick="switchTab('news')" id="btn-news" class="w-full text-left p-4 rounded-2xl border-2 glass-panel border-transparent hover:border-slate-200 transition-all">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-800">3. Market News</span>
+                        <span class="text-xs font-black text-slate-400">65%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Public visibility and trend density.</p>
+                </button>
+                <button onclick="switchTab('moat')" id="btn-moat" class="w-full text-left p-4 rounded-2xl border-2 glass-panel border-transparent hover:border-slate-200 transition-all">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-800">4. Tech Moat</span>
+                        <span class="text-xs font-black text-slate-400">94%</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Competitive density & IP novelty.</p>
+                </button>
+            </div>
+
+            <!-- Main Content Area: Tab Content -->
+            <div class="xl:col-span-3 glass-panel rounded-3xl p-8" id="tab-content">
+                <div id="pillar-viewer">
+                    <h3 class="text-xl font-bold mb-4">Technical Foundation (Grants)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Asset NP-702 is built on a foundation of significant federal validation. This represents a "pre-vetted" technology with over $7.2M in peer-reviewed funding.
+                            </p>
+                            <div class="space-y-2">
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold">DARPA Phase II Award</span>
+                                    <span class="text-xs text-blue-600 font-bold">$5,000,000</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold">NSF Quantum Leap Grant</span>
+                                    <span class="text-xs text-blue-600 font-bold">$1,200,000</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold">DoE Energy Storage Seed</span>
+                                    <span class="text-xs text-blue-600 font-bold">$1,000,000</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="pillarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Evidence Ledger -->
+        <section class="glass-panel rounded-3xl overflow-hidden">
+            <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">Evidence Ledger & Data Lineage</h3>
+                    <p class="text-xs text-slate-500 mt-1">Raw audit trail of market signals backing the Enginuity Score.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Live Data Verified</span>
+                </div>
+            </div>
+            <table class="w-full text-left border-collapse">
+                <thead class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                    <tr>
+                        <th class="px-8 py-4">Evidence Source</th>
+                        <th class="px-8 py-4">Indicator Type</th>
+                        <th class="px-8 py-4">Signal Strength</th>
+                        <th class="px-8 py-4">Data Reference ID</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50" id="ledger-body">
+                    <!-- Rows Injected by JS -->
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer class="max-w-[1400px] mx-auto p-8 text-center border-t border-slate-200 mt-12">
+        <p class="text-xs text-slate-400 font-bold tracking-widest uppercase mb-2">Enginuity™ Trust Engine v2.5</p>
+        <p class="text-[10px] text-slate-400">Methodology: Sector benchmarks are recalculated every 30 days. No SVG graphics or external Mermaid assets used.</p>
+    </footer>
+
+    <!-- App Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            let pillarChart = null;
+
+            // --- DATA STORE ---
+            const assetData = {
+                id: "NP-702",
+                title: "Solid-State Quantum Sensors",
+                radar: [98, 74, 91, 65, 94],
+                benchmark: [60, 55, 62, 58, 50],
+                ledger: [
+                    { source: "DARPA", type: "Federal Grant", strength: "High", id: "D-2024-PH2-772" },
+                    { source: "Pitchbook", type: "Sector Investment", strength: "Medium", id: "VC-QUANT-2025" },
+                    { source: "USPTO", type: "Forward Citation", strength: "High", id: "US-1029384-C" },
+                    { source: "Bloomberg", type: "News Density", strength: "Medium", id: "NEWS-001293" }
+                ],
+                scenarios: {
+                    Defense: { partners: 12, sam: "$2.8B", samPerc: 20, insight: "Primary vertical. ITAR restrictions apply. High interest from Tier-1 Defense Primes." },
+                    Compute: { partners: 5, sam: "$8.4B", samPerc: 60, insight: "Emerging vertical. Focused on quantum-stable noise reduction. High VC interest." },
+                    Energy: { partners: 22, sam: "$1.2B", samPerc: 8, insight: "Broad utility. Focus on smart-grid integration and low-cost manufacturing." },
+                    MedTech: { partners: 8, sam: "$4.1B", samPerc: 30, insight: "Regulatory pathway (FDA) required. Competitive density is high in non-invasive sensing." }
+                }
+            };
+
+            // --- RADAR CHART ---
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            const radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Grants', 'VC Ready', 'Ind Demand', 'News', 'Moat'],
+                    datasets: [
+                        {
+                            label: 'Asset NP-702',
+                            data: assetData.radar,
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'Sector Avg',
+                            data: assetData.benchmark,
+                            backgroundColor: 'rgba(203, 213, 225, 0.1)',
+                            borderColor: '#cbd5e1',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#f1f5f9' },
+                            grid: { color: '#f1f5f9' },
+                            ticks: { display: false },
+                            pointLabels: { color: '#64748b', font: { size: 10, weight: 'bold' } },
+                            suggestedMin: 0, suggestedMax: 100
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // --- SCOPE FILTER LOGIC ---
+            function updateScope() {
+                const vertical = document.getElementById('scope-vertical').value;
+                const scenario = assetData.scenarios[vertical];
+                
+                document.getElementById('partner-count').innerText = scenario.partners;
+                document.getElementById('sam-value').innerText = scenario.sam;
+                document.getElementById('sam-bar').style.width = scenario.samPerc + '%';
+                
+                const container = document.getElementById('insight-container');
+                container.innerHTML = `
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 rounded bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">★</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase">Strategic Fit</h4>
+                            <p class="text-[11px] text-slate-500 leading-normal">${scenario.insight}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 rounded bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">↑</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase">Tech Advantage</h4>
+                            <p class="text-[11px] text-slate-500 leading-normal">High <strong>Technical Moat</strong> (+44% over avg). Exceptional uniqueness enables licensing premium.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 rounded bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">!</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 uppercase">Market Risk</h4>
+                            <p class="text-[11px] text-slate-500 leading-normal">${vertical === 'Defense' ? 'Export controls (ITAR) significantly limit the partner pool to domestic entities.' : 'Regulatory hurdles and standard shifts in ' + vertical + ' require aggressive IP maintenance.'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('scope-vertical').addEventListener('change', updateScope);
+            updateScope(); // Initial run
+
+            // --- TAB SWITCHER & PILLAR CONTENT ---
+            window.switchTab = (tab) => {
+                const tabs = ['grants', 'industry', 'news', 'moat'];
+                tabs.forEach(t => {
+                    const btn = document.getElementById(`btn-${t}`);
+                    btn.classList.remove('pillar-active', 'border-blue-600');
+                    btn.classList.add('border-transparent');
+                });
+                document.getElementById(`btn-${tab}`).classList.add('pillar-active', 'border-blue-600');
+                updatePillarContent(tab);
+            };
+
+            function updatePillarContent(tab) {
+                const viewer = document.getElementById('pillar-viewer');
+                if(pillarChart) pillarChart.destroy();
+                const ctx = document.getElementById('pillarChart').getContext('2d');
+
+                if (tab === 'grants') {
+                    viewer.querySelector('h3').innerText = "Technical Foundation (Grants)";
+                    pillarChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['DARPA', 'NSF', 'DoE'],
+                            datasets: [{ label: 'Funding ($M)', data: [5, 1.2, 1], backgroundColor: '#3b82f6', borderRadius: 8 }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                } else if (tab === 'industry') {
+                    viewer.querySelector('h3').innerText = "Industry Interest Heatmap";
+                    pillarChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Raytheon', 'Lockheed', 'IBM', 'Others'],
+                            datasets: [{ data: [40, 30, 20, 10], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#cbd5e1'] }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                } else if (tab === 'news') {
+                    viewer.querySelector('h3').innerText = "Market Sentiment Timeline";
+                    pillarChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Oct', 'Nov', 'Dec', 'Jan'],
+                            datasets: [{ label: 'News Volume', data: [12, 19, 45, 60], borderColor: '#f59e0b', tension: 0.4, fill: true, backgroundColor: 'rgba(245, 158, 11, 0.1)' }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                } else if (tab === 'moat') {
+                    viewer.querySelector('h3').innerText = "Competitive Moat Index";
+                    viewer.querySelector('p').innerText = "Asset score compared to sector baseline across core novelty metrics.";
+                    
+                    pillarChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Novelty', 'Non-Obviousness', 'Claim Breadth', 'Prior Art Density'],
+                            datasets: [
+                                {
+                                    label: 'Asset NP-702',
+                                    data: [95, 90, 85, 98],
+                                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+                                    borderRadius: 4,
+                                    barThickness: 20
+                                },
+                                {
+                                    label: 'Sector Baseline',
+                                    data: [60, 55, 62, 58],
+                                    backgroundColor: '#e2e8f0',
+                                    borderRadius: 4,
+                                    barThickness: 20
+                                }
+                            ]
+                        },
+                        options: { 
+                            indexAxis: 'y',
+                            responsive: true, 
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: { max: 100, grid: { display: false }, ticks: { font: { size: 10 } } },
+                                y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: { boxWidth: 10, font: { size: 10 } }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            const ledgerBody = document.getElementById('ledger-body');
+            ledgerBody.innerHTML = assetData.ledger.map(row => `
+                <tr class="hover:bg-slate-50 transition-colors text-[11px]">
+                    <td class="px-8 py-4"><span class="font-bold text-slate-800">${row.source}</span></td>
+                    <td class="px-8 py-4"><span class="text-slate-500 font-medium uppercase">${row.type}</span></td>
+                    <td class="px-8 py-4"><span class="evidence-pill ${row.strength === 'High' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${row.strength} Signal</span></td>
+                    <td class="px-8 py-4 font-mono text-slate-400">${row.id}</td>
+                </tr>
+            `).join('');
+
+            updatePillarContent('grants');
+        });
+    </script>
+</body>
+</html>

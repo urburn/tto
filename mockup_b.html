@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enginuity | Market Demand Signals Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-dark: #1a2537;
+            --secondary-dark: #2c3e50;
+            --accent-blue: #3498db;
+            --signal-green: #2ecc71;
+            --signal-yellow: #f1c40f;
+            --signal-red: #e74c3c;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+        }
+
+        /* Navbar styling to look like enterprise software */
+        .navbar-custom {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: white !important;
+        }
+
+        .role-badge {
+            background-color: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Main layout */
+        .dashboard-container {
+            padding: 20px;
+        }
+
+        .card-custom {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .card-header-custom {
+            background-color: white;
+            border-bottom: 2px solid #f0f2f5;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Table Styling */
+        .table-custom thead th {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            font-weight: 600;
+            border-top: none;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f7fc;
+            cursor: pointer;
+            border-left: 4px solid var(--accent-blue);
+        }
+        
+        .asset-title {
+            font-weight: 600;
+            color: var(--secondary-dark);
+        }
+        
+        .researcher-name {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+
+        /* Signal Visualization within table */
+        .signal-pill {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            position: relative;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .signal-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+        .fill-high { background-color: var(--signal-green); }
+        .fill-med { background-color: var(--signal-yellow); }
+        .fill-low { background-color: var(--signal-red); }
+
+        .cvs-score {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Right Sidebar - The Trust Hub */
+        .trust-hub-panel {
+            background-color: white;
+            border-left: 1px solid #e9ecef;
+            height: calc(100vh - 70px);
+            position: sticky;
+            top: 70px;
+            overflow-y: auto;
+        }
+
+        .evidence-block {
+            padding: 15px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .evidence-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--secondary-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .evidence-title i {
+            margin-right: 8px;
+            color: var(--accent-blue);
+        }
+
+        .data-source {
+            font-size: 0.75rem;
+            color: #95a5a6;
+            text-align: right;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .trust-badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #eef2f7;
+            color: #5f6e83;
+            border: 1px solid #dce4ec;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-network-wired me-2"></i>ENGINUITY
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="role-badge me-3">View: VP Innovation / TTO</span>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button">
+                        <i class="fas fa-filter me-1"></i> Filter Portfolio
+                    </button>
+                </div>
+                <i class="fas fa-user-circle fa-lg ms-4"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 dashboard-container">
+                
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <h6 class="text-muted mb-1">Portfolio Assets Monitored</h6>
+                            <h3 class="fw-bold m-0">1,452</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> 12 new this month</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom p-3">
+                            <h6 class="text-muted mb-1">High Market Signal Assets</h6>
+                            <h3 class="fw-bold m-0 text-primary">87</h3>
+                            <small class="text-muted">CVS Score > 75</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-custom p-3 bg-light border-primary border-2">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">VP Actionable Insight</h6>
+                                    <p class="mb-0 smaller">"Project Chimera" (AI/Bio) shows a 400% spike in corporate CVC activity in Q3. Recommend immediate outreach to Pfizer Ventures.</p>
+                                </div>
+                                <i class="fas fa-bolt fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom">
+                    <div class="card-header-custom">
+                        <span>Dynamic Portfolio Prioritization</span>
+                        <div>
+                             <span class="badge bg-light text-dark border me-2"><i class="fas fa-info-circle text-primary me-1"></i>Sorted by Commercial Velocity</span>
+                             <button class="btn btn-sm btn-primary">Export Report</button>
+                        </div>
+                       
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-custom align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Asset / Research Cluster</th>
+                                    <th style="width: 10%;">Status</th>
+                                    <th style="width: 10%; text-align: center;">Public Grants<br>(Validation)</th>
+                                    <th style="width: 10%; text-align: center;">VC Invest<br>(Readiness)</th>
+                                    <th style="width: 10%; text-align: center;">Ind. Demand<br>(Engagement)</th>
+                                    <th style="width: 10%; text-align: center;">News Density<br>(Market Buzz)</th>
+                                    <th style="width: 10%; text-align: center;">IP Novelty<br>(Defensibility)</th>
+                                    <th style="width: 15%; text-align: center;">Commercial<br>Velocity Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-active-row border-start-primary">
+                                    <td>
+                                        <div class="asset-title">Project Chimera: Neural-Symbolic AI for Drug Discovery</div>
+                                        <div class="researcher-name">Lead: Dr. E. Vance (CompBio Lab)</div>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">Provisional Patent</span></td>
+                                    
+                                    <td class="text-center">
+                                        <span class="fw-bold text-success">High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 90%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold text-success">Very High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 98%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold text-success">High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 85%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold text-warning">Med</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-med" style="width: 60%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold text-success">High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 92%;"></div></div>
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <div class="cvs-score text-primary">94/100</div>
+                                        <small class="text-success"><i class="fas fa-arrow-up"></i> Trending up</small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="asset-title">Solid State electrolyte Refinement (Lithium-Metal)</div>
+                                        <div class="researcher-name">Lead: Prof. A. Chen (Materials Sci)</div>
+                                    </td>
+                                    <td><span class="badge bg-success">Licensed (Non-Ex)</span></td>
+                                    <td class="text-center">
+                                        <span>Med</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-med" style="width: 60%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-success">High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 80%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-success">Very High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 95%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-success">High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 88%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-danger">Low</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-low" style="width: 30%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="cvs-score text-dark">78/100</div>
+                                        <small class="text-muted">Stable</small>
+                                    </td>
+                                </tr>
+
+                                 <tr>
+                                    <td>
+                                        <div class="asset-title">Advanced Photonic Computing Architectures</div>
+                                        <div class="researcher-name">Lead: Dr. K. Sharma (Physics)</div>
+                                    </td>
+                                    <td><span class="badge bg-secondary">Research Phase</span></td>
+                                    <td class="text-center">
+                                        <span class="text-success">Very High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 95%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-danger">Low</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-low" style="width: 20%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-danger">Low</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-low" style="width: 15%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-danger">Low</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-low" style="width: 10%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="text-success">Very High</span>
+                                        <div class="signal-pill"><div class="signal-fill fill-high" style="width: 99%;"></div></div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="cvs-score text-dark">45/100</div>
+                                        <small class="text-muted">Too early for VC</small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 trust-hub-panel p-0 shadow-sm">
+                <div class="p-3 bg-light border-bottom">
+                    <h5 class="mb-1">Signal Validation Hub</h5>
+                    <p class="mb-0 smaller text-muted">Explaining the score for: <strong>Project Chimera</strong></p>
+                </div>
+
+                <div class="evidence-block">
+                    <div class="evidence-title"><i class="fas fa-chart-line"></i> Relative Performance Benchmark</div>
+                    <p class="smaller mb-2">How this asset compares to typical university IP in the "Bio-AI" sector.</p>
+                    <canvas id="benchmarkChart" height="150"></canvas>
+                    <small class="text-center d-block mt-2 fw-bold text-primary">Outcome: Top 5% Percentile in Sector</small>
+                </div>
+                 
+                <div class="evidence-block">
+                    <div class="evidence-title d-flex justify-content-between">
+                        <span><i class="fas fa-money-bill-wave"></i> VC Investment Signal (98/100)</span>
+                        <span class="trust-badge">High Trust</span>
+                    </div>
+                    <p class="smaller text-muted mb-2">Why the score is high: Recent massive funding rounds in directly competing technologies.</p>
+                    
+                    <ul class="list-group list-group-flush smaller">
+                        <li class="list-group-item d-flex justify-content-between align-items-start bg-light mb-1 rounded">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">Competitor: Recursion Pharma</div>
+                                Series D funding round.
+                            </div>
+                            <span class="badge bg-success rounded-pill">$450M</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-start bg-light mb-1 rounded">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">Competitor: Insitro</div>
+                                Series C funding round.
+                            </div>
+                            <span class="badge bg-success rounded-pill">$400M</span>
+                        </li>
+                    </ul>
+                    <span class="data-source"><i class="fas fa-database"></i> Source: Pitchbook & Crunchbase API (Updated Today)</span>
+                </div>
+
+                <div class="evidence-block">
+                    <div class="evidence-title d-flex justify-content-between">
+                         <span><i class="fas fa-handshake"></i> Industry Demand (85/100)</span>
+                         <span class="trust-badge">Med Trust</span>
+                    </div>
+                   
+                    <p class="smaller text-muted mb-2">Active Corporate Innovation Challenges matching this research:</p>
+                    
+                    <div class="card mb-2 p-2 bg-light border-0">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="fab fa-google me-2 text-danger"></i>
+                            <strong>Google Health</strong>
+                        </div>
+                        <p class="smaller mb-0 fst-italic">"Seeking partners for neural network applications in small molecule discovery..."</p>
+                    </div>
+                     <div class="card mb-2 p-2 bg-light border-0">
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="fas fa-capsules me-2 text-primary"></i>
+                            <strong>Novartis</strong>
+                        </div>
+                        <p class="smaller mb-0 fst-italic">"Open innovation call: Reducing failure rates in pre-clinical trials using AI."</p>
+                    </div>
+                     <span class="data-source"><i class="fas fa-database"></i> Source: Corporate Innovation Portals / Yet2.com scrape</span>
+                </div>
+
+                <div class="evidence-block">
+                    <div class="evidence-title"><i class="fas fa-shield-alt"></i> IP Novelty / Defensibility (92/100)</div>
+                    <p class="smaller text-muted">Analysis of patent landscape density.</p>
+                    <div class="alert alert-success smaller p-2 mb-2">
+                        <i class="fas fa-check-circle me-1"></i> <strong>"White Space" Identified.</strong> Only 3 direct patent families exist in the intersection of "Neural-Symbolic" and "Drug Discovery".
+                    </div>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100">92% Unique</div>
+                    </div>
+                     <span class="data-source mt-1"><i class="fas fa-database"></i> Source: Innography / USPTO Data</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Activating the first row visually to match the sidebar content
+        document.addEventListener("DOMContentLoaded", () => {
+            const firstRow = document.querySelector('.table-custom tbody tr:first-child');
+            if(firstRow) {
+                firstRow.classList.add('table-active', 'bg-light');
+            }
+        });
+
+        // Chart.js setup for the Benchmark Radar Chart in the sidebar
+        const ctx = document.getElementById('benchmarkChart').getContext('2d');
+        const benchmarkChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Public Grants',
+                    'VC Readiness',
+                    'Corporate Demand',
+                    'News Buzz',
+                    'IP Novelty'
+                ],
+                datasets: [{
+                    label: 'Project Chimera',
+                    data: [90, 98, 85, 60, 92],
+                    fill: true,
+                    backgroundColor: 'rgba(52, 152, 219, 0.4)',
+                    borderColor: 'rgb(52, 152, 219)',
+                    pointBackgroundColor: 'rgb(52, 152, 219)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(52, 152, 219)'
+                }, {
+                    label: 'Sector Average (Bio-AI)',
+                    data: [65, 45, 50, 40, 60],
+                    fill: true,
+                    backgroundColor: 'rgba(149, 165, 166, 0.2)',
+                    borderColor: 'rgb(149, 165, 166)',
+                    pointBackgroundColor: 'rgb(149, 165, 166)',
+                    pointBorderColor: '#fff',
+                    borderDash: [5, 5]
+                }]
+            },
+            options: {
+                elements: {
+                    line: { borderWidth: 2 }
+                },
+                scales: {
+                    r: {
+                        angleLines: { display: false },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        ticks: { display: false } // Hide chart axis numbers for cleaner look
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
